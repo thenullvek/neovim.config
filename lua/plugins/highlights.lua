@@ -1,6 +1,17 @@
 return {
   -- Highlight todo, notes, etc in comments
-  { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
+  {
+    'folke/todo-comments.nvim',
+    event = 'VimEnter',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    opts = {
+      signs = false,
+      gui_style = {
+        fg = "NONE", -- The gui style to use for the fg highlight group.
+        bg = "BOLD", -- The gui style to use for the bg highlight group.
+      },
+    }
+  },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
@@ -14,6 +25,7 @@ return {
         'diff',
         'gitignore',
         'html',
+        'java',
         'json',
         'latex',
         'lua',
@@ -60,4 +72,12 @@ return {
       multiline_threshold = 10,
     }
   },
+  {
+    "brenoprata10/nvim-highlight-colors",
+    config = function()
+      require('nvim-highlight-colors').setup({
+        render = 'background',
+      })
+    end
+  }
 }

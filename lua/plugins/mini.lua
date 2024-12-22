@@ -16,14 +16,14 @@ return {
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup {}
-      require('mini.indentscope').setup {
+      --[[ require('mini.indentscope').setup {
         draw = {
           animation = function()
             return 0
           end,
         },
         symbol = '│',
-      }
+      } ]]
     end,
   },
 }
