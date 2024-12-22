@@ -84,7 +84,7 @@ return {
           map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
           -- lsp hover
-          map("hv", "<cmd>Lspsaga hover_doc<cr>", "LSP: [H]o[v]er")
+          -- map("hv", "<cmd>Lspsaga hover_doc<cr>", "LSP: [H]o[v]er")
 
           -- The following two autocommands are used to highlight references of the
           -- word under your cursor when your cursor rests there for a little while.
@@ -200,6 +200,11 @@ return {
         neocmake = {
           cmd = { 'neocmakelsp', '--stdio' },
         },
+        asm_lsp = {
+          filetypes = { 'asm', 'vasm', 's', 'S' }
+        },
+        cmake = {},
+        pyright = {},
       }
 
       -- Ensure the servers and tools above are installed
@@ -213,12 +218,18 @@ return {
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
+      local no_mason_install = { "ltex", "bash-language-server", "als" }
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
-        'bash-language-server',
         'jq',
         'jq-lsp',
       })
+      ensure_installed = vim.tbl_filter(function(key)
+        if vim.tbl_contains(no_mason_install, key) then
+          return false
+        end
+        return true
+      end, ensure_installed)
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
       require('mason-lspconfig').setup {

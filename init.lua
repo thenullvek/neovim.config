@@ -19,5 +19,11 @@ end
 
 require 'start'
 
+-- Setup for ocp-indent
+local opam_share_path = vim.fn.system { 'opam', 'var', 'share' }
+if vim.v.shell_error == 0 then
+  vim.opt.rtp:append(opam_share_path .. "/ocp-indent/vim")
+end
+
 -- Load configuration script in vimscript.
 vim.cmd("source " .. vim.fn.stdpath("config") .. "/init2.vim")

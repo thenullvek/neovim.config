@@ -1,8 +1,8 @@
 return {
   {
     'stevearc/oil.nvim',
-    enabled = false,
     opts = {
+      default_file_explorer = false,
       columns = {
         'icon',
         'size',
