@@ -11,7 +11,6 @@ return {
     local dap = require 'dap'
     local dapui = require 'dapui'
     return {
-      -- Basic debugging keymaps, feel free to change to your liking!
       {
         '<F5>',
         function()
@@ -22,10 +21,11 @@ return {
         end,
         desc = 'Debug: Start/Continue'
       },
-      { '<F1>',      dap.step_into,         desc = 'Debug: Step Into' },
-      { '<F2>',      dap.step_over,         desc = 'Debug: Step Over' },
-      { '<F3>',      dap.step_out,          desc = 'Debug: Step Out' },
-      { '<leader>b', dap.toggle_breakpoint, desc = 'Debug: Toggle Breakpoint' },
+      { '<F1>',            dap.step_into,           desc = 'Debug: Step Into' },
+      { '<F2>',            dap.step_over,           desc = 'Debug: Step Over' },
+      { '<F3>',            dap.step_out,            desc = 'Debug: Step Out' },
+      { '<localleader>b',  dap.toggle_breakpoint,   desc = 'Debug: Toggle Breakpoint' },
+      { '<localleader>cb', dap.clear_breakpoints(), desc = 'Debug: Clear Breakpoints' },
       {
         '<leader>B',
         function()
@@ -55,7 +55,7 @@ return {
       },
     }
 
-    require('nvim-dap-virtual-text').setup()
+    require('nvim-dap-virtual-text').setup({})
 
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|

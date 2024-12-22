@@ -29,7 +29,7 @@ vim.keymap.set('n', 'qq', '<C-w><C-q>', { desc = 'Quit current window' })
 
 -- Show keymap help
 vim.keymap.set('n', 'H', '<cmd>WhichKey<cr>', { desc = 'Show keymap help', silent = true })
-vim.keymap.set('n', 'oo', '<cmd>Neotree toggle<cr>', { desc = 'Open file browser', silent = true })
+vim.keymap.set('n', 'ß', '<cmd>Neotree toggle<cr>', { desc = 'Open file browser', silent = true })
 
 -- Toggle Terminal
 vim.keymap.set("n", "<C-t>", "<cmd>ToggleTerm<CR>", { desc = "[T]oggle Terminal" })

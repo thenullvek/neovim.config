@@ -28,14 +28,14 @@ return {
   }, ]]
   {
     'stevearc/resession.nvim',
-    config = function ()
-      require("resession").setup()
+    config = function()
+      require("resession").setup({})
     end,
-    init = function ()
+    init = function()
       local resession = require("resession")
-      vim.keymap.set("n", "<leader>ss", resession.save, {desc = "[S]ession [S]ave"})
-      vim.keymap.set("n", "<leader>sl", resession.load, {desc = "[S]ession [L]oad"})
-      vim.keymap.set("n", "<leader>sd", resession.delete, {desc = "[S]ession [D]elete"})
+      vim.keymap.set("n", "<localleader>ss", resession.save, { desc = "[S]ession [S]ave" })
+      vim.keymap.set("n", "<localleader>sl", resession.load, { desc = "[S]ession [L]oad" })
+      vim.keymap.set("n", "<localleader>sd", resession.delete, { desc = "[S]ession [D]elete" })
     end
   }
 }
