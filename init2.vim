@@ -27,3 +27,8 @@ let g:VM_maps["Invert Direction"]            = 'o'
 let g:VM_maps["Find Operator"]               = "m"
 let g:VM_maps["Surround"]                    = 'S'
 let g:VM_maps["Replace Pattern"]             = 'R'
+
+" Don't load Coqtail
+let g:loaded_coqtail = 1
+let g:coqtail#supported = 0
+

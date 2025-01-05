@@ -19,10 +19,15 @@ end
 
 require 'start'
 
+if vim.g.neovide then
+  require 'neovide'
+end
+
 -- Setup for ocp-indent
 local opam_share_path = vim.fn.system { 'opam', 'var', 'share' }
 if vim.v.shell_error == 0 then
-  vim.opt.rtp:append(opam_share_path .. "/ocp-indent/vim")
+  local p = opam_share_path:gsub("[\r\n]", "")
+  vim.opt.rtp:append(p .. "/ocp-indent/vim")
 end
 
 -- Load configuration script in vimscript.
