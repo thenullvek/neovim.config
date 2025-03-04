@@ -13,7 +13,7 @@ end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
 local secretpath = vim.fn.stdpath 'config' .. '/lua/secret.lua'
-if not vim.uv.fs_stat(secretpath) then
+if vim.uv.fs_stat(secretpath) then
   require 'secret'
 end
 
@@ -24,10 +24,12 @@ if vim.g.neovide then
 end
 
 -- Setup for ocp-indent
-local opam_share_path = vim.fn.system { 'opam', 'var', 'share' }
-if vim.v.shell_error == 0 then
-  local p = opam_share_path:gsub("[\r\n]", "")
-  vim.opt.rtp:append(p .. "/ocp-indent/vim")
+if vim.fn.executable("opam") == 1 then
+  local opam_share_path = vim.fn.system { 'opam', 'var', 'share' }
+  if vim.v.shell_error == 0 then
+    local p = opam_share_path:gsub("[\r\n]", "")
+    vim.opt.rtp:append(p .. "/ocp-indent/vim")
+  end
 end
 
 -- Load configuration script in vimscript.
