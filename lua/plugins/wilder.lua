@@ -1,5 +1,6 @@
 return {
   {
+    -- If wilder does not run properly, run :UpdateRemotePlugins
     'gelguy/wilder.nvim',
     config = function()
       local wilder = require 'wilder'
