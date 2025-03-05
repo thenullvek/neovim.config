@@ -1,5 +1,4 @@
 require 'vim_options'
-require 'keymap'
 require 'autocmds'
 
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -17,6 +16,20 @@ if vim.uv.fs_stat(secretpath) then
   require 'secret'
 end
 
+-- Detect the layout if we are on darwin.
+local user_os_name = vim.uv.os_uname().sysname
+if user_os_name == 'Darwin' then
+  if vim.fn.executable('kbdinfo') == 1 then
+    local kbdstr = vim.fn.system("kbdinfo")
+    if string.sub(kbdstr, 1, 2) == 'US' then
+      vim.g.us_layout = 1
+    else
+      vim.g.us_layout = 0
+    end
+  end
+end
+
+require 'keymap'
 require 'start'
 
 if vim.g.neovide then
