@@ -32,3 +32,4 @@ let g:VM_maps["Replace Pattern"]             = 'R'
 let g:loaded_coqtail = 1
 let g:coqtail#supported = 0
 
+set smarttab
