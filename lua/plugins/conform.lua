@@ -23,7 +23,8 @@ return {
           },
         },
         formatters_by_ft = {
-          json = { "jq" }
+          json = { "jq" },
+          lua = { "stylua" },
         },
         format_on_save = function(bufnr)
           if slow_fmts[vim.bo[bufnr].filetype] or vim.tbl_contains(ignored_filetypes, vim.bo[bufnr].filetype) then

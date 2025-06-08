@@ -1,24 +1,20 @@
 return {
-  { -- Autocompletion
-    'hrsh7th/nvim-cmp',
-    event = 'InsertEnter',
+  {
+    'xzbdmw/colorful-menu.nvim',
+  },
+  {
+    'saghen/blink.cmp',
     dependencies = {
-      -- Snippet Engine & its associated nvim-cmp source
       {
         'L3MON4D3/LuaSnip',
+        version = 'v2.*',
         build = (function()
-          -- Build Step is needed for regex support in snippets.
-          -- This step is not supported in many windows environments.
-          -- Remove the below condition to re-enable on windows.
           if vim.fn.has 'win32' == 1 or vim.fn.executable 'make' == 0 then
             return
           end
           return 'make install_jsregexp'
         end)(),
         dependencies = {
-          -- `friendly-snippets` contains a variety of premade snippets.
-          --    See the README about individual language/framework/plugin snippets:
-          --    https://github.com/rafamadriz/friendly-snippets
           {
             'rafamadriz/friendly-snippets',
             config = function()
@@ -27,100 +23,141 @@ return {
           },
         },
       },
-      'saadparwaiz1/cmp_luasnip',
-
-      -- Adds other completion capabilities.
-      --  nvim-cmp does not ship with all sources by default. They are split
-      --  into multiple repos for maintenance purposes.
-      'hrsh7th/cmp-nvim-lsp',
-      'hrsh7th/cmp-path',
-      'hrsh7th/cmp-buffer',
-      'rcarriga/cmp-dap'
+      'onsails/lspkind.nvim',
+      'Saghen/blink.compat',
+      'rcarriga/cmp-dap',
     },
-    config = function()
-      -- See `:help cmp`
-      local cmp = require 'cmp'
-      local luasnip = require 'luasnip'
-      luasnip.config.setup {}
+    version = '1.*',
+    build = 'cargo build --release',
+    opts = {
+      completion = {
+        accept = { auto_brackets = { enabled = false } },
+        menu = {
+          draw = {
+            columns = { { 'kind_icon' }, { 'label', gap = 1 } },
+            components = {
+              kind_icon = {
+                text = function(ctx)
+                  local lspkind = require 'lspkind'
+                  local icon = ctx.kind_icon
+                  if vim.tbl_contains({ 'Path' }, ctx.source_name) then
+                    local dev_icon, _ = require('nvim-web-devicons').get_icon(ctx.label)
+                    if dev_icon then
+                      icon = dev_icon
+                    end
+                  else
+                    icon = lspkind.symbolic(ctx.kind, {
+                      mode = 'symbol',
+                    })
+                  end
+                  return icon .. ctx.icon_gap
+                end,
 
-      cmp.setup {
-        snippet = {
-          expand = function(args)
-            luasnip.lsp_expand(args.body)
-          end,
+                highlight = function(ctx)
+                  local hl = ctx.kind_hl
+                  if vim.tbl_contains({ 'Path' }, ctx.source_name) then
+                    local dev_icon, dev_hl = require('nvim-web-devicons').get_icon(ctx.label)
+                    if dev_icon then
+                      hl = dev_hl
+                    end
+                  end
+                  return hl
+                end,
+              },
+              label = {
+                text = function(ctx)
+                  return require('colorful-menu').blink_components_text(ctx)
+                end,
+                highlight = function(ctx)
+                  return require('colorful-menu').blink_components_highlight(ctx)
+                end,
+              },
+            },
+            treesitter = { 'lsp' },
+          },
         },
-        completion = { completeopt = 'menu,menuone,noinsert' },
-
-        -- For an understanding of why these mappings were
-        -- chosen, you will need to read `:help ins-completion`
-        --
-        -- No, but seriously. Please read `:help ins-completion`, it is really good!
-        mapping = cmp.mapping.preset.insert {
-          -- Select the [n]ext item
-          ['<C-j>'] = cmp.mapping.select_next_item(),
-          -- Select the [p]revious item
-          ['<C-k>'] = cmp.mapping.select_prev_item(),
-
-          -- Scroll the documentation window [b]ack / [f]orward
-          ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-          ['<C-f>'] = cmp.mapping.scroll_docs(4),
-
-          -- Accept ([y]es) the completion.
-          --  This will auto-import if your LSP supports it.
-          --  This will expand snippets if the LSP sent a snippet.
-          ['<CR>'] = cmp.mapping.confirm { select = true },
-
-          -- If you prefer more traditional completion keymaps,
-          -- you can uncomment the following lines
-          --['<CR>'] = cmp.mapping.confirm { select = true },
-          --['<Tab>'] = cmp.mapping.select_next_item(),
-          --['<S-Tab>'] = cmp.mapping.select_prev_item(),
-
-          -- Manually trigger a completion from nvim-cmp.
-          --  Generally you don't need this, because nvim-cmp will display
-          --  completions whenever it has completion options available.
-          ['<C-Space>'] = cmp.mapping.complete {},
-
-          -- Think of <c-l> as moving to the right of your snippet expansion.
-          --  So if you have a snippet that's like:
-          --  function $name($args)
-          --    $body
-          --  end
-          --
-          -- <c-l> will move you to the right of each of the expansion locations.
-          -- <c-h> is similar, except moving you backwards.
-          ['<C-l>'] = cmp.mapping(function()
+      },
+      keymap = {
+        preset = 'none',
+        ['<Up>'] = { 'select_prev', 'fallback' },
+        ['<Down>'] = { 'select_next', 'fallback' },
+        ['<C-k>'] = { 'select_prev', 'fallback' },
+        ['<C-j>'] = { 'select_next', 'fallback' },
+        ['<C-b>'] = { 'scroll_documentation_up' },
+        ['<C-f>'] = { 'scroll_documentation_down' },
+        ['<S-CR>'] = { 'accept' },
+        ['<esc>'] = { 'cancel', 'fallback' },
+        ['<Tab>'] = {
+          function(cmp)
+            local luasnip = require 'luasnip'
             if luasnip.expand_or_locally_jumpable() then
               luasnip.expand_or_jump()
+              cmp.snippet_forward()
+            else
+              return false
             end
-          end, { 'i', 's' }),
-          ['<C-h>'] = cmp.mapping(function()
+            return true
+          end,
+          'fallback',
+        },
+        ['<S-Tab>'] = {
+          function(cmp)
+            local luasnip = require 'luasnip'
             if luasnip.locally_jumpable(-1) then
               luasnip.jump(-1)
+              cmp.snippet_backward()
+            else
+              return false
             end
-          end, { 'i', 's' }),
-
-          -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
-          --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
+            return true
+          end,
+          'fallback',
         },
-        sources = {
-          {
-            name = 'lazydev',
-            -- set group index to 0 to skip loading LuaLS completions as lazydev recommends it
-            group_index = 0,
+        ['<C-p>'] = { 'show_documentation', 'hide_documentation', 'fallback' },
+        -- ['<C-m>'] = { 'show_signature', 'hide_signature', 'fallback' },
+      },
+      sources = {
+        default = function()
+          if require('cmp_dap').is_dap_buffer() then
+            return { 'dap', 'snippets', 'buffer' }
+          end
+          return { 'lazydev', 'lsp', 'path', 'snippets', 'buffer' }
+        end,
+        providers = {
+          lazydev = {
+            name = 'LazyDev',
+            module = 'lazydev.integrations.blink',
+            -- make lazydev completions top priority (see `:h blink.cmp`)
+            score_offset = 100,
           },
-          { name = 'nvim_lsp' },
-          { name = 'luasnip' },
-          { name = 'path' },
-          { name = 'buffer' },
-          { name = 'dap' },
+          dap = {
+            name = 'dap',
+            module = 'blink.compat.source',
+          },
         },
-      }
-      cmp.setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
-        sources = {
-          { name = "dap" },
+      },
+      cmdline = {
+        enabled = false,
+        keymap = {
+          preset = 'none',
+          ['<Tab>'] = { 'show', 'accept', 'fallback' },
+          ['<Up>'] = { 'select_prev', 'fallback' },
+          ['<Down>'] = { 'select_next', 'fallback' },
+          ['<C-k>'] = { 'select_prev', 'fallback' },
+          ['<C-j>'] = { 'select_next', 'fallback' },
         },
-      })
+        completion = { menu = { auto_show = true } },
+        sources = {},
+      },
+      signature = {
+        enabled = true,
+        window = {
+          border = 'single',
+        },
+      },
+    },
+    config = function(_, opts)
+      require('blink.cmp').setup(opts)
     end,
   },
 }

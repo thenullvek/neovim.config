@@ -2,7 +2,7 @@ return {
   {
     "tomtomjhj/vscoq.nvim",
     enabled = function()
-      return vim.fn.executable("opam") == 1
+      return false --vim.fn.executable("opam") == 1
     end,
     config = function()
       local opam_bin_path = vim.fn.system { 'opam', 'var', 'bin' }
