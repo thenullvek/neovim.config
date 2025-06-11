@@ -33,3 +33,4 @@ let g:loaded_coqtail = 1
 let g:coqtail#supported = 0
 
 set smarttab
+set tabstop=4

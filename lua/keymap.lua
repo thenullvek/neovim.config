@@ -18,21 +18,30 @@ vim.keymap.set('n', '<leader>q', '<cmd>Trouble qflist toggle<cr>', { desc = 'Ope
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 --  See `:help wincmd` for a list of all window commands
-vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
-vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
-vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
-vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+-- vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
+-- vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
+-- vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
+-- vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
-vim.keymap.set('n', 'yh', '<C-w><C-s>', { desc = 'Split window horizontally' })
-vim.keymap.set('n', 'yv', '<C-w><C-v>', { desc = 'Split window vertically' })
+vim.keymap.set('n', 'oh', function()
+  vim.cmd 'split | wincmd h'
+  require('oil').open()
+end, { desc = 'Oil with split' })
+vim.keymap.set('n', 'ov', function()
+  vim.cmd 'vsplit | wincmd h'
+  require('oil').open()
+end, { desc = 'Oil with vsplit' })
+vim.keymap.set('n', 'oo', function()
+  require('oil').open()
+end, { desc = 'Oil in current window' })
 vim.keymap.set('n', 'qq', '<C-w><C-q>', { desc = 'Quit current window' })
 
 -- Show keymap help
 vim.keymap.set('n', 'H', '<cmd>WhichKey<cr>', { desc = 'Show keymap help', silent = true })
-if vim.g.us_layout == 1 then
+--[[ if vim.g.us_layout == 1 then
   vim.keymap.set('n', '|', '<cmd>Neotree toggle<cr>', { desc = 'Open file browser', silent = true })
 else
   vim.keymap.set('n', 'ß', '<cmd>Neotree toggle<cr>', { desc = 'Open file browser', silent = true })
-end
+end ]]
 -- Toggle Terminal
-vim.keymap.set("n", "<C-t>", "<cmd>ToggleTerm<CR>", { desc = "[T]oggle Terminal" })
+vim.keymap.set('n', '<C-t>', '<cmd>ToggleTerm<CR>', { desc = '[T]oggle Terminal' })

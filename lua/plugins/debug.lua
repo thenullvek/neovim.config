@@ -14,17 +14,17 @@ return {
       {
         '<F5>',
         function()
-          if vim.fn.filereadable(".vscode/launch.json") then
-            require("dap.ext.vscode").load_launchjs(nil, {})
+          if vim.fn.filereadable '.vscode/launch.json' then
+            require('dap.ext.vscode').load_launchjs(nil, {})
           end
           dap.continue()
         end,
-        desc = 'Debug: Start/Continue'
+        desc = 'Debug: Start/Continue',
       },
-      { '<F1>',            dap.step_into,           desc = 'Debug: Step Into' },
-      { '<F2>',            dap.step_over,           desc = 'Debug: Step Over' },
-      { '<F3>',            dap.step_out,            desc = 'Debug: Step Out' },
-      { '<localleader>b',  dap.toggle_breakpoint,   desc = 'Debug: Toggle Breakpoint' },
+      { '<F1>', dap.step_into, desc = 'Debug: Step Into' },
+      { '<F2>', dap.step_over, desc = 'Debug: Step Over' },
+      { '<F3>', dap.step_out, desc = 'Debug: Step Out' },
+      { '<localleader>b', dap.toggle_breakpoint, desc = 'Debug: Toggle Breakpoint' },
       { '<localleader>cb', dap.clear_breakpoints(), desc = 'Debug: Clear Breakpoints' },
       {
         '<leader>B',
@@ -55,7 +55,7 @@ return {
       },
     }
 
-    require('nvim-dap-virtual-text').setup({})
+    require('nvim-dap-virtual-text').setup {}
 
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
@@ -65,10 +65,10 @@ return {
     dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
     -- Setup adapters.
-    dap.adapters["lldb-dap"] = {
-      type = "executable",
-      command = "/opt/homebrew/opt/llvm/bin/lldb-dap",
-      name = "lldb-dap"
+    dap.adapters['lldb-dap'] = {
+      type = 'executable',
+      command = '/opt/homebrew/opt/llvm/bin/lldb-dap',
+      name = 'lldb-dap',
     }
     dap.configurations.cpp = {
       {
@@ -81,7 +81,7 @@ return {
         cwd = '${workspaceFolder}',
         stopOnEntry = false,
         args = {},
-      }
+      },
     }
     dap.configurations.c = dap.configurations.cpp
 
@@ -98,7 +98,7 @@ return {
         args = {},
         initCommands = function()
           -- Find out where to look for the pretty printer Python module
-          local rustc_sysroot = vim.fn.trim(vim.fn.system('rustc --print sysroot'))
+          local rustc_sysroot = vim.fn.trim(vim.fn.system 'rustc --print sysroot')
 
           local script_import = 'command script import "' .. rustc_sysroot .. '/lib/rustlib/etc/lldb_lookup.py"'
           local commands_file = rustc_sysroot .. '/lib/rustlib/etc/lldb_commands'
@@ -116,7 +116,7 @@ return {
           return commands
         end,
         -- ...,
-      }
+      },
     }
   end,
 }
